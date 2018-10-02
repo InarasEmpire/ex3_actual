@@ -23,21 +23,26 @@
         <div class="container">
             <% String usernameFromSession = SessionUtils.getUsername(request);%>
             <% String usernameFromParameter = request.getParameter(Constants.USERNAME) != null ? request.getParameter(Constants.USERNAME) : "";%>
+            <% Boolean isComputerFromParameter = request.getParameter(Constants.IS_COMPUTER) != null ? true : false;%>
             <% if (usernameFromSession == null) {%>
-            <h1>Welcome to the Online Chat</h1>
+            <h1>Welcome to Nina's Ro'</h1>
             <br/>
             <h2>Please enter a unique user name:</h2>
             <form method="GET" action="login">
-                <input type="text" name="<%=Constants.USERNAME%>" value="<%=usernameFromParameter%>"/>
+                Name:
+                <input type="text" name="<%=Constants.USERNAME%>" value="<%=usernameFromParameter%>">
+                <input type="checkbox" name="<%=Constants.IS_COMPUTER%>" value="<%=isComputerFromParameter%>"> Computer<br>
+                <br><br>
                 <input type="submit" value="Login"/>
             </form>
+
             <% Object errorMessage = request.getAttribute(Constants.USER_NAME_ERROR);%>
             <% if (errorMessage != null) {%>
             <span class="bg-danger" style="color:red;"><%=errorMessage%></span>
             <% } %>
             <% } else {%>
             <h1>Welcome back, <%=usernameFromSession%></h1>
-            <a href="../chatroom/chatroom.html">Click here to enter the chat room</a>
+            <a href="../chatroom/chatroom.html">Click here to enter the games room</a>
             <br/>
             <a href="login?logout=true" id="logout">logout</a>
             <% }%>

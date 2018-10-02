@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
                 usernameFromParameter = usernameFromParameter.trim();
 
                 synchronized (this) {
-                    if (userManager.isUserExists(usernameFromParameter)) {
+                    if (userManager.isUserExists(usernameFromParameter)) { //todo: check if this works
                         String errorMessage = "Username " + usernameFromParameter + " already exists. Please enter a different username.";
                 
                         request.setAttribute(Constants.USER_NAME_ERROR, errorMessage);

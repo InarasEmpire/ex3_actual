@@ -4,6 +4,8 @@ import chat.constants.Constants;
 import chat.utils.ServletUtils;
 import chat.utils.SessionUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import engine.table.SingleTableEntry;
 import engine.table.TableManager;
 
@@ -49,16 +51,19 @@ public class TableServlet extends HttpServlet {
 
         // log and create the response json string
         TableAndVersion tav = new TableAndVersion(tableEntries, tableManagerVersion);
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(tav);
-        logServerMessage("Server Chat version: " + tableManagerVersion + ", User '" + username + "' Chat version: " + tableVersion);
-        logServerMessage(jsonResponse);
+        try {
+            logServerMessage("Server Chat version: " + tableManagerVersion + ", User '" + username + "' Chat version: " + tableVersion);
+            logServerMessage(tableManager.toString());
 
-        try (PrintWriter out = response.getWriter()) {
-            out.print(jsonResponse);
-            out.flush();
+            try (PrintWriter out = response.getWriter()) {
+                out.print(tableManager.toString());
+                out.flush();
+            }
         }
-
+        catch(Exception e)
+        {
+            e.getMessage();
+        }
     }
 
     private void logServerMessage(String message){

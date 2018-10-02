@@ -3,6 +3,8 @@ var refreshRate = 2000; //mili seconds
 var USER_LIST_URL = buildUrlWithContextPath("userslist");
 var TABLE_LIST_URL = buildUrlWithContextPath("table");
 
+//TODO: add error message for errors
+
 /*
 User List Handler
  */
@@ -58,7 +60,7 @@ function appendTableEntry(index, entry){
     $("#tablearea").append(entryElement);
 }
 
-function createTableEntry (entry){
+function createTableEntry (currGame){
     // entry.filename = entry.chatString.replace(":)", "<span class='smiley'></span>");
     var newEntry = "<tr><td class=\"text-left\">"+currGame.GameTitle+"</td><td class=\"text-left\">"+currGame.Creator+"</td>" +
         "<td class=\"text-left\">"+currGame.BoardSize+"</td><td class=\"text-left\">"+currGame.Target+"</td>" +
@@ -77,32 +79,14 @@ function ajaxTableContent() {
         data: "tableversion=" + tableVersion,
         dataType: 'json',
         success: function(data) {
-            /*
-             data is of the next form:
-             {
-                "entries": [
-                    {
-                        "fileName":"Hi",
-                        "username":"bbb",
-                        "time":1485548397514
-                    },
-                    {
-                        "fileName":"Hello",
-                        "username":"bbb",
-                        "time":1485548397514
-                    }
-                ],
-                "version":1
-             }
-             */
             //console.log("Server chat version: " + data.version + ", Current tableVersion version: " + tableVersion);
            // console.log(data.toString());
             console.log("data.version: " + data.version + " || tableVersion: " +tableVersion);
 
             if (data.version !== tableVersion) {
-                console.log("APPENDINGGGGGGGGGGGGGGGGG");
+                console.log("APPENDINGGGGGGGGGGGGGGGGG 1");
                 tableVersion = data.version;
-                appendToTableArea(data.entries);
+                appendToTableArea(data.games);
             }
             triggerAjaxTableContent();
         },
@@ -115,19 +99,21 @@ function ajaxTableContent() {
 //add a method to the button in order to make that form use AJAX
 //and not actually submit the form
 $(function() { // onload...do
-
-
     //add a function to the submit event
    // $("#tableform").submit(function() {
 
-    $("form#tableform").submit(function(){
-        var formData = new FormData($(this)[0]);
+    $("#tableform").submit(function(e){
+        e.preventDefault();
+        var form = $("#tableform")[0];
+        var formData = new FormData(form);
 
         $.ajax({
             data: formData,
             url: this.action,
             type: 'POST',
             timeout: 2000,
+            contentType:false,
+            processData:false,
             error: function() {
                 console.error("Failed to submit");
             },

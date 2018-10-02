@@ -29,39 +29,37 @@ public class AddFileServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
             response.setContentType("application/json");
 
             PrintWriter out = response.getWriter();
+            try {
+                TableManager tableManager = ServletUtils.getTableManager(getServletContext());
+                String username = SessionUtils.getUsername(request);
+                if (username == null) {
+                    response.sendRedirect(request.getContextPath() + "/login.html");
+                }
+                Part filePart = request.getPart("file1");
+                String filenameString = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
 
-            TableManager tableManager = ServletUtils.getTableManager(getServletContext());
-            String username = SessionUtils.getUsername(request);
-            if (username == null) {
-                response.sendRedirect(request.getContextPath() + "../gamesroom.html");
-            }
-            // todo: exception user is not logged in
+                StringBuilder fileContent = new StringBuilder();
+                fileContent.append(readFromInputStream(filePart.getInputStream()));
 
-            // todo: et the filename in other way
+                if (filenameString != null && !filenameString.isEmpty() && filenameString.contains(".xml")) {
+                    //logServerMessage("Adding filename string from " + username + ": " + filenameString);
+                    synchronized (getServletContext()) {
+                            tableManager.addTableEntry(filenameString, username, fileContent.toString());
+                    }
+                } else {
+                    throw new Exception("game file must be in XML format and not empty.");
 
-            Part filePart = request.getPart("file1");
-            String filenameString = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-
-            StringBuilder fileContent = new StringBuilder();
-            fileContent.append(readFromInputStream(filePart.getInputStream()));
-
-            if (filenameString != null && !filenameString.isEmpty() && filenameString.contains(".xml")) {
-                //logServerMessage("Adding filename string from " + username + ": " + filenameString);
-                synchronized (getServletContext()) {
-                    tableManager.addTableEntry(filenameString, username, fileContent.toString());
                 }
             }
-
-          //  out.print(tableManager.toString());
-        }
-        catch (Exception e){
-            String ss = e.getMessage();
-        }
-        // TODO: exception-> its not an xml file
+            catch (Exception e)
+            {
+                response.setStatus(400);
+                out.print(e.getMessage());
+                out.flush();
+            }
     }
 
     private String readFromInputStream (InputStream inputStream){

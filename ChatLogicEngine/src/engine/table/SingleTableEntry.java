@@ -6,7 +6,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,7 @@ public class SingleTableEntry {
     public GameDescriptor gameDescriptor;
   //  public int totalPlayer;
 
-    public SingleTableEntry(String username, String  fileName, String fileContent) {
+    public SingleTableEntry(String username, String  fileName, String fileContent) throws Exception {
         this.fileName = fileName;
         this.creator = username;
         addNewGame(fileContent);
@@ -40,31 +39,22 @@ public class SingleTableEntry {
         return (creator != null ? creator : "");
     }
 
-    private synchronized String addNewGame(String fileContent) {
-        String msg="";
-        try{
-            GameDescriptor newGame;
-            try {
-                InputStream stream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
-                JAXBContext jaxbContext = JAXBContext.newInstance(GameDescriptor.class);
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                newGame = (GameDescriptor)(jaxbUnmarshaller.unmarshal(new InputStreamReader(stream)));
-                newGame.init();
-            }
-            catch(JAXBException e){
-                throw new Exception("please check your xml format");
-            }
+    private synchronized void addNewGame(String fileContent) throws Exception {
+        GameDescriptor newGame;
 
-            validateGame(newGame);
-
-            gameDescriptor = newGame;
-            //totalPlayer = newGame.getDynamicPlayers().getTotalPlayers();
-
-        } catch (Exception e) {
-            //todo: throw exception
-            msg = e.getMessage();
+        try {
+            InputStream stream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
+            JAXBContext jaxbContext = JAXBContext.newInstance(GameDescriptor.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            newGame = (GameDescriptor)(jaxbUnmarshaller.unmarshal(new InputStreamReader(stream)));
+            newGame.init();
         }
-        return msg;
+        catch(JAXBException e){
+            throw new Exception("Please validate yur XML file structure.");
+        }
+
+        validateGame(newGame);
+        gameDescriptor = newGame;
     }
 
     private void validateGame(GameDescriptor game)throws Exception{

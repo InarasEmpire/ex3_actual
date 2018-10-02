@@ -18,9 +18,17 @@ public class TableManager {
         tableDataList = new ArrayList<>();
     }
 
-    public synchronized void addTableEntry(String fileName, String username, String fileContent) {
-        tableDataList.add(new SingleTableEntry(username, fileName, fileContent));
-        //todo: catch exception
+    public synchronized void addTableEntry(String fileName, String username, String fileContent) throws Exception {
+
+        SingleTableEntry newEntry =new SingleTableEntry(username, fileName, fileContent);
+        for(SingleTableEntry currentry: tableDataList)
+        {
+            if(currentry.gameDescriptor.getDynamicPlayers().getGameTitle().equals(newEntry.gameDescriptor.getDynamicPlayers().getGameTitle()))
+            {
+                throw new Exception("Your game title already exists, please change it.");
+            }
+        }
+        tableDataList.add(newEntry);
     }
 
     public synchronized List<SingleTableEntry> getTableEntries(int fromIndex){
@@ -56,5 +64,4 @@ public class TableManager {
         gamesJson.addProperty("version",  getVersion());
         return gamesJson.toString();
     }
-
 }

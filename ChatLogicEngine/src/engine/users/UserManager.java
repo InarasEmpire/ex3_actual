@@ -41,7 +41,7 @@ public class UserManager {
     public boolean isUserExists(String username) {
         for (Iterator<UserContainer> iter = usersList.iterator(); iter.hasNext(); ) {
             UserContainer currUser = iter.next();
-            if (currUser.Name == username) {
+            if (currUser.Name.equals(username)) {
                 return true;
             }
         }

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="GameLogicEngine">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/GameLogicEngine/src" />
+    </SOURCES>
+  </library>
+</component>

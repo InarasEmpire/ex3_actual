@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Online Chat</title>
+	<script src="../../common/jquery-2.0.3.min.js"></script>
+	<script src="../../common/context-path-helper.js"></script>
+	<script src="gamesroom.js"></script>
+	<link rel="stylesheet" href="../../common/bootstrap.min.css">
+	<link rel="stylesheet" href="gamesroom.css">
+</head>
+<body>
+
+<header>
+
+	<h4>Welcome to games area</h4>
+	<div>
+		<!--<h6>Upload a Game File:</h6>
+		<form method="POST" action="../upload" enctype="multipart/form-data">
+			<input type="file" name="file1"><br>
+			<input type="Submit" value="Upload File"><br>
+		</form>
+		-->
+	</div>
+
+</header>
+<section>
+	<h3>BLOB</h3>
+<div class="container-fluid">
+	<nav>
+	<div class="row">
+		<div class="col-xs-1">
+			<div class="sidebar">
+				<h4>Online</h4>
+				<div class="clearfix">
+					<div class="input">
+						<ul id="userslist">
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</nav>
+	<article>
+		<h4>Games</h4>
+		<!--<form enctype="multipart/form-data" method="POST" action="../addFile"> id="tableform"  -->
+
+		<form action="../addFile" method="POST" enctype="multipart/form-data" id="tableform">
+			<input type="file" name="file1"><br>
+			<input type="Submit" value="Upload File"><br>
+		</form>
+
+
+		<br>
+		<table>
+			<tr>
+				<th class="text-left">Game Title</th>
+				<th class="text-left">Creator</th>
+				<th class="text-left">Board Size</th>
+				<th class="text-left">Target</th>
+				<th class="text-left">Variant</th>
+				<th class="text-left">Status</th>
+				<th class="text-left">Players</th>
+			</tr>
+		</table>
+
+			<table id="tablearea">
+				<tbody class="table-hover">
+				</tbody>
+			</table>
+
+	</article>
+	</div>
+
+</section>>
+</body>
+</html>

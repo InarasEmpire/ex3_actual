@@ -199,6 +199,11 @@ public class GameDescriptor {
         if(game.target.intValue() < TARGET_MIN || game.target.intValue() >= board.rows || game.target.intValue() >= board.columns.intValue())
             throw new Exception("Target value must be smaller than columns size and rows size and at least "+TARGET_MIN);
 
+        if(game.variant.isEmpty() || (game.variant.compareTo("Circular") != 0) && (game.variant.compareTo("Popout") != 0)
+                && (game.variant.compareTo("Regular") != 0))
+            throw new Exception("Variant value is invalid. Must be one of the following: Circular/Popouyt/Regular.");
+
+
         this.getDynamicPlayers().init();
 //        if(this.players == null)
 //        {

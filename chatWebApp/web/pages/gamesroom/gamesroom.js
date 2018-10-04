@@ -3,7 +3,6 @@ var refreshRate = 2000; //mili seconds
 var USER_LIST_URL = buildUrlWithContextPath("userslist");
 var TABLE_LIST_URL = buildUrlWithContextPath("table");
 
-//TODO: add error message for errors
 
 /*
 User List Handler
@@ -23,8 +22,6 @@ function refreshUsersList(users) {
     });
 }
 
-
-
 /*
 
 Table Game Handle
@@ -42,17 +39,24 @@ function ajaxUsersList() {
 
 //entries = the added chat strings represented as a single string
 function appendToTableArea(entries) {
-//    $("#chatarea").children(".success").removeClass("success");
-
-    //("#tablearea").append("<tr><th>user name</th><th>file name</th></tr>");
-
     // add the relevant entries
+    $("#tablearea").empty();
+    $("#tablearea").append("\t\t\t<tr>\n" +
+        "\t\t\t\t<th class=\"text-left\">Game Title</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Creator</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Board Size</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Target</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Variant</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Status</th>\n" +
+        "\t\t\t\t<th class=\"text-left\">Players</th>\n" +
+        "\t\t\t</tr>");
+
     $.each(entries || [], appendTableEntry);
 
     // handle the scroller to auto scroll to the end of the chat area
-    var scroller = $("#tablearea");
-    var height = scroller[0].scrollHeight - $(scroller).height();
-    $(scroller).stop().animate({ scrollTop: height }, "slow");
+   // var scroller = $("#tablearea");
+    //var height = scroller[0].scrollHeight - $(scroller).height();
+    //$(scroller).stop().animate({ scrollTop: height }, "slow");
 }
 
 function appendTableEntry(index, entry){
@@ -61,7 +65,6 @@ function appendTableEntry(index, entry){
 }
 
 function createTableEntry (currGame){
-    // entry.filename = entry.chatString.replace(":)", "<span class='smiley'></span>");
     var newEntry = "<tr><td class=\"text-left\">"+currGame.GameTitle+"</td><td class=\"text-left\">"+currGame.Creator+"</td>" +
         "<td class=\"text-left\">"+currGame.BoardSize+"</td><td class=\"text-left\">"+currGame.Target+"</td>" +
         "<td class=\"text-left\">"+currGame.Variant+"</td><td class=\"text-left\">"+currGame.Status+"</td>" +
@@ -79,12 +82,9 @@ function ajaxTableContent() {
         data: "tableversion=" + tableVersion,
         dataType: 'json',
         success: function(data) {
-            //console.log("Server chat version: " + data.version + ", Current tableVersion version: " + tableVersion);
-           // console.log(data.toString());
             console.log("data.version: " + data.version + " || tableVersion: " +tableVersion);
-
+            //clearErrorMessage("");
             if (data.version !== tableVersion) {
-                console.log("APPENDINGGGGGGGGGGGGGGGGG 1");
                 tableVersion = data.version;
                 appendToTableArea(data.games);
             }
@@ -92,6 +92,7 @@ function ajaxTableContent() {
         },
         error: function(error) {
             triggerAjaxTableContent();
+            errorMessage(error.responseText);
         }
     });
 }
@@ -114,11 +115,13 @@ $(function() { // onload...do
             timeout: 2000,
             contentType:false,
             processData:false,
-            error: function() {
+            error: function(error) {
                 console.error("Failed to submit");
+                errorMessage(error.responseText);
             },
             success: function() {
                 console.log("success onload");
+                clearErrorMessage();
                 //do not add the user string to the chat area
                 //since it's going to be retrieved from the server
                 //$("#result h1").text(r);
@@ -140,18 +143,26 @@ function triggerAjaxTableContent() {
 OTHERS
  */
 
-function errorMessge(error)
+function errorMessage(error)
 {
-    document.write("\n" +
-        "<div class=\"cd-popup\" role=\"alert\">\n" +
-        "\t<div class=\"cd-popup-container\">\n" +
-        "\t\t<p>"+error.toString()+"</p>\n" +
-        "\t\t<ul class=\"cd-buttons\">\n" +
-        "\t\t\t<li><a href=\"#0\">OK</a></li>\n" +
-        "\t\t</ul>\n" +
-        "\t\t<a class=\"cd-popup-close img-replace\">Close</a>\n" +
-        "\t</div>\n" +
-        "</div> ");
+    var cmp = error.localeCompare("");
+    if(cmp !== 0 ) {
+        clearErrorMessage();
+
+        $("#errorarea").append("\t<div id=\"popup1\" class=\"overlay\">\n" +
+            "\t\t<div class=\"popup\">\n" +
+            "\t\t\t<h2>ERROR!!</h2>\n" +
+            "\t\t\t<a class=\"close\" href=\"javascript:clearErrorMessage()\">&times;</a>\n" +
+            "\t\t\t<div class=\"content\" id=content\">\n" +
+            error +
+            "\t\t\t</div>\n" +
+            "\t\t</div>\n" +
+            "\t</div>");
+    }
+}
+
+function clearErrorMessage(){
+    $("#errorarea").empty();
 }
 
 //activate the timer calls after the page is loaded
@@ -164,3 +175,56 @@ $(function() {
     //on each call it triggers another execution of itself later (1 second later)
     triggerAjaxTableContent();
 });
+
+
+/*
+click on table row
+ */
+
+//TODO: add buttons
+$(document).on("click", "tr", function(e) {
+    $(this).append("<!-- The Modal -->\n" +
+        "<div id=\"myModal\" class=\"modal\">\n" +
+        "\n" +
+        "  <div class=\"modal-content\">\n" +
+        "    <span class=\"close\">&times;</span>\n" +
+        "    <p>You are about to start the game</p>\n" +
+        "\t<button type=\"submit\"  onclick=\"gotoGame( $(this).index());\"\">Enter Game</button>\n" +
+        "<button type=\"submit\" value=\"Submit\" onclick=\"closeTab()\">Dismiss</button>" +
+        "  </div>\n" +
+        "\n\n" +
+        "</div>\n"
+    );
+    var modal = document.getElementById('myModal');
+
+
+// Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+
+        modal.style.display = "block";
+
+// When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+// When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+
+function gotoGame(index){
+    var id = (index - 1);
+    var url = buildUrlWithContextPath("../../games?index=" +  index);
+
+    document.location.href = url;
+}
+
+function closeTab(){
+ document.getElementById("myModal").innerHTML = "";
+
+}

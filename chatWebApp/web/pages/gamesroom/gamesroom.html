@@ -12,22 +12,20 @@
 <body>
 
 <header>
-
 	<h4>Welcome to games area</h4>
 	<div>
-		<!--<h6>Upload a Game File:</h6>
-		<form method="POST" action="../upload" enctype="multipart/form-data">
+		<form action="../addFile" method="POST" enctype="multipart/form-data" id="tableform">
 			<input type="file" name="file1"><br>
 			<input type="Submit" value="Upload File"><br>
 		</form>
-		-->
+		<div id="errorarea">
+		</div>
 	</div>
 
 </header>
-<section>
-	<h3>BLOOOOOOO</h3>
+	<section>
+		<nav>
 <div class="container-fluid">
-	<nav>
 	<div class="row">
 		<div class="col-xs-1">
 			<div class="sidebar">
@@ -41,18 +39,14 @@
 			</div>
 		</div>
 	</div>
+</div>
 	</nav>
+
+
 	<article>
 		<h4>Games</h4>
-		<!--<form enctype="multipart/form-data" method="POST" action="../addFile"> id="tableform"  -->
-
-		<form action="../addFile" method="POST" enctype="multipart/form-data" id="tableform">
-			<input type="file" name="file1"><br>
-			<input type="Submit" value="Upload File"><br>
-		</form>
-
-
 		<br>
+	<div id="gamepopup"></div>
 		<table id="tablearea">
 			<tr>
 				<th class="text-left">Game Title</th>
@@ -64,15 +58,9 @@
 				<th class="text-left">Players</th>
 			</tr>
 		</table>
-
-			<!--<table id="tablearea">
-				<tbody class="table-hover">
-				</tbody>
-			</table>
--->
 	</article>
-	</div>
 
-</section>>
+</section>
+
 </body>
 </html>

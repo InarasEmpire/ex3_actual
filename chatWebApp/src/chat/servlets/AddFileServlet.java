@@ -45,7 +45,6 @@ public class AddFileServlet extends HttpServlet {
                 fileContent.append(readFromInputStream(filePart.getInputStream()));
 
                 if (filenameString != null && !filenameString.isEmpty() && filenameString.contains(".xml")) {
-                    //logServerMessage("Adding filename string from " + username + ": " + filenameString);
                     synchronized (getServletContext()) {
                             tableManager.addTableEntry(filenameString, username, fileContent.toString());
                     }
@@ -66,4 +65,4 @@ public class AddFileServlet extends HttpServlet {
         return new Scanner(inputStream).useDelimiter("\\Z").next();
     }
 
-    }
+}

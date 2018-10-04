@@ -64,4 +64,12 @@ public class TableManager {
         gamesJson.addProperty("version",  getVersion());
         return gamesJson.toString();
     }
+
+    public synchronized SingleTableEntry getTableEntryByIndex(int index){
+        if (index < 0 || index >= tableDataList.size()) {
+            return null;
+        }
+        return tableDataList.get(index);
+    }
+
 }

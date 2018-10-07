@@ -22,5 +22,6 @@
     <orderEntry type="module" module-name="ChatLogicEngine" />
     <orderEntry type="library" name="gson-2.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 8.5.34" level="application_server_libraries" />
+    <orderEntry type="module" module-name="GameLogicEngine" />
   </component>
 </module>

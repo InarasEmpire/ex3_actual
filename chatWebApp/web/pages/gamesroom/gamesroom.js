@@ -2,6 +2,7 @@ var tableVersion = 0;
 var refreshRate = 2000; //mili seconds
 var USER_LIST_URL = buildUrlWithContextPath("userslist");
 var TABLE_LIST_URL = buildUrlWithContextPath("table");
+var NEW_GAAME_REQUEST_URL = buildUrlWithContextPath("games");
 
 
 /*
@@ -227,4 +228,26 @@ function gotoGame(index){
 function closeTab(){
  document.getElementById("myModal").innerHTML = "";
 
+}
+
+function gotoNewGame() {
+    console.log("inside gotoNewGame");
+    $.ajax({
+        url: NEW_GAAME_REQUEST_URL,
+        data: "tableversion=" + tableVersion,
+
+        success: function(data) {
+            console.log("data.version: " + data.version + " || tableVersion: " +tableVersion);
+            //clearErrorMessage("");
+            if (data.version !== tableVersion) {
+                tableVersion = data.version;
+                appendToTableArea(data.games);
+            }
+            triggerAjaxTableContent();
+        },
+        error: function(error) {
+            triggerAjaxTableContent();
+            errorMessage(error.responseText);
+        }
+    });
 }

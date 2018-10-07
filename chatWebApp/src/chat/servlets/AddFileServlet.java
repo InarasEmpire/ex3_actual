@@ -2,6 +2,7 @@ package chat.servlets;
 
 import chat.utils.ServletUtils;
 import chat.utils.SessionUtils;
+import engine.singlegame.GamesManager;
 import engine.table.TableManager;
 
 import java.io.IOException;
@@ -44,9 +45,11 @@ public class AddFileServlet extends HttpServlet {
                 StringBuilder fileContent = new StringBuilder();
                 fileContent.append(readFromInputStream(filePart.getInputStream()));
 
+                GamesManager gamesManager = ServletUtils.getGamesManager(getServletContext());
+
                 if (filenameString != null && !filenameString.isEmpty() && filenameString.contains(".xml")) {
                     synchronized (getServletContext()) {
-                            tableManager.addTableEntry(filenameString, username, fileContent.toString());
+                        gamesManager.addNewGame( tableManager.addTableEntry(filenameString, username, fileContent.toString()).gameDescriptor );
                     }
                 } else {
                     throw new Exception("game file must be in XML format and not empty.");

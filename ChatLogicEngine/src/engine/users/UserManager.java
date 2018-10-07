@@ -4,13 +4,14 @@ import java.util.*;
 
 public class UserManager {
     private final Set<UserContainer> usersList ;
-
+    int idCounter = 0;
     public UserManager() {
         usersList = new HashSet<>();
     }
 
     public synchronized void addUser(String username, Boolean type) {
-        usersList.add(new UserContainer(username, type));
+        usersList.add(new UserContainer(username, type, idCounter));
+        idCounter++;
     }
 
     public synchronized void removeUser(String username) {
@@ -58,6 +59,18 @@ public class UserManager {
         }
 
         return false;
+    }
+
+    public int getUserId(String username)
+    {
+        for (Iterator<UserContainer> iter = usersList.iterator(); iter.hasNext(); ) {
+            UserContainer currUser = iter.next();
+            if (currUser.Name == username) {
+                return currUser.id;
+            }
+        }
+
+        return -1;
     }
 
 }

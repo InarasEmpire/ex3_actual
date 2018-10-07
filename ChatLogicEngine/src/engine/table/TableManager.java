@@ -6,6 +6,8 @@ import java.util.List;
 import Logic.Player;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import engine.singlegame.SingleGame;
+
 /*
 This class is thread safe for the manner of adding\fetching new chat lines, but not for the manner of getting the size of the list
 if the use of getVersion is to be incorporated with other methods here - it should be synchronized from the user code
@@ -18,17 +20,18 @@ public class TableManager {
         tableDataList = new ArrayList<>();
     }
 
-    public synchronized void addTableEntry(String fileName, String username, String fileContent) throws Exception {
+    public synchronized SingleGame addTableEntry(String fileName, String username, String fileContent) throws Exception {
 
         SingleTableEntry newEntry =new SingleTableEntry(username, fileName, fileContent);
         for(SingleTableEntry currentry: tableDataList)
         {
-            if(currentry.gameDescriptor.getDynamicPlayers().getGameTitle().equals(newEntry.gameDescriptor.getDynamicPlayers().getGameTitle()))
+            if(currentry.singleGame.gameDescriptor.getDynamicPlayers().getGameTitle().equals(newEntry.singleGame.gameDescriptor.getDynamicPlayers().getGameTitle()))
             {
                 throw new Exception("Your game title already exists, please change it.");
             }
         }
         tableDataList.add(newEntry);
+        return newEntry.singleGame;
     }
 
     public synchronized List<SingleTableEntry> getTableEntries(int fromIndex){
@@ -47,15 +50,15 @@ public class TableManager {
 
         for (SingleTableEntry currGame: tableDataList) {
             JsonObject  currentGameJson = new JsonObject();
-            currentGameJson.addProperty("GameTitle", currGame.gameDescriptor.getDynamicPlayers().getGameTitle());
+            currentGameJson.addProperty("GameTitle", currGame.singleGame.gameDescriptor.getDynamicPlayers().getGameTitle());
             currentGameJson.addProperty("Creator", currGame.creator);
             currentGameJson.addProperty("BoardSize",
-                    currGame.gameDescriptor.getGame().getBoard().getRows() + "x" + currGame.gameDescriptor.getGame().getBoard().getColumns());
-            currentGameJson.addProperty("Target", currGame.gameDescriptor.getGame().getTarget());
-            currentGameJson.addProperty("Variant", currGame.gameDescriptor.getGame().getVariant());
-            currentGameJson.addProperty("Status", currGame.gameDescriptor.isActive()? "Active" : "Non-Active");
+                    currGame.singleGame.gameDescriptor.getGame().getBoard().getRows() + "x" + currGame.singleGame.gameDescriptor.getGame().getBoard().getColumns());
+            currentGameJson.addProperty("Target", currGame.singleGame.gameDescriptor.getGame().getTarget());
+            currentGameJson.addProperty("Variant", currGame.singleGame.gameDescriptor.getGame().getVariant());
+            currentGameJson.addProperty("Status", currGame.singleGame.gameDescriptor.isActive()? "Active" : "Non-Active");
             currentGameJson.addProperty("Players",
-                    currGame.gameDescriptor.getDynamicPlayers().getPlayers().size() + "/" + currGame.gameDescriptor.getDynamicPlayers().getTotalPlayers());
+                    currGame.singleGame.gameDescriptor.getDynamicPlayers().getPlayers().size() + "/" + currGame.singleGame.gameDescriptor.getDynamicPlayers().getTotalPlayers());
 
             gamesJsonArray.add(currentGameJson);
         }

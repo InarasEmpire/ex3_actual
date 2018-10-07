@@ -65,6 +65,11 @@ public class Player implements Serializable {
 
     protected int turnAmount = 0;
 
+    public Player(String userName, boolean isComputer, int id){
+        this.name = userName;
+        this.type = isComputer ? "computer" : "human";
+        this.id = (short)id;
+    }
 
     /**
      * Gets the value of the name property.

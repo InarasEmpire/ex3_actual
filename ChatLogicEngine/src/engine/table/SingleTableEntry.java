@@ -1,6 +1,8 @@
 package engine.table;
 
 import Logic.GameDescriptor;
+import engine.singlegame.GamesManager;
+import engine.singlegame.SingleGame;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,8 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class SingleTableEntry {
     public final String fileName;
     public  final String creator;
-    public GameDescriptor gameDescriptor;
-  //  public int totalPlayer;
+    public SingleGame singleGame;
 
     public SingleTableEntry(String username, String  fileName, String fileContent) throws Exception {
         this.fileName = fileName;
@@ -54,7 +55,7 @@ public class SingleTableEntry {
         }
 
         validateGame(newGame);
-        gameDescriptor = newGame;
+        singleGame = new SingleGame(newGame);
     }
 
     private void validateGame(GameDescriptor game)throws Exception{

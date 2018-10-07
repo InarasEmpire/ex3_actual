@@ -7,11 +7,13 @@ of the user of this class to handle the synchronization of isUserExists with oth
  *
  */
 public class UserContainer{
-    String Name;
-    Boolean IsComputer;
+    public String Name;
+    public boolean IsComputer;
+    public int id;
 
-    public UserContainer(String name, Boolean IsComputer){
+    public UserContainer(String name, boolean IsComputer, int id){
         this.Name = name;
         this.IsComputer = IsComputer;
+        this.id = id;
     }
 }

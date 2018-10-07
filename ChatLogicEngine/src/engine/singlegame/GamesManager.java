@@ -1,5 +1,6 @@
 package engine.singlegame;
 
+import Logic.Disc;
 import Logic.GameDescriptor;
 import Logic.Player;
 import com.google.gson.JsonArray;
@@ -54,7 +55,7 @@ public class GamesManager {
 
         JsonObject singleGameJson = new JsonObject();
 
-
+        //players
         JsonArray playersJsonArray= new JsonArray();
         for(UIPlayer player : singleGame.uiPlayersList)
         {
@@ -62,29 +63,54 @@ public class GamesManager {
             currentPlayerJson.addProperty("name", player.player.getName());
             currentPlayerJson.addProperty("type", player.player.getType());
             currentPlayerJson.addProperty("color", player.color);
+            currentPlayerJson.addProperty("turnAmount", player.player.getTurnAmount());
             playersJsonArray.add(currentPlayerJson);
         }
         singleGameJson.add("players", playersJsonArray);
+        singleGameJson.addProperty("nextTurn", singleGame.gameDescriptor.getPlayers().getActivePlayer().getName());
 
-    //TODO: continue. map the game table from user-id to user-color
-        /*
-        JsonObject  currentGameJson = new JsonObject();
-        currentGameJson.addProperty("GameTitle", currGame.singleGame.gameDescriptor.getDynamicPlayers().getGameTitle());
-        currentGameJson.addProperty("Creator", currGame.creator);
-        currentGameJson.addProperty("BoardSize",
-                currGame.singleGame.gameDescriptor.getGame().getBoard().getRows() + "x" + currGame.singleGame.gameDescriptor.getGame().getBoard().getColumns());
-        currentGameJson.addProperty("Target", currGame.singleGame.gameDescriptor.getGame().getTarget());
-        currentGameJson.addProperty("Variant", currGame.singleGame.gameDescriptor.getGame().getVariant());
-        currentGameJson.addProperty("Status", currGame.singleGame.gameDescriptor.isActive()? "Active" : "Non-Active");
-        currentGameJson.addProperty("Players",
-                currGame.singleGame.gameDescriptor.getDynamicPlayers().getPlayers().size() + "/" + currGame.singleGame.gameDescriptor.getDynamicPlayers().getTotalPlayers());
+        // board
+        singleGameJson.addProperty("cols", singleGame.gameDescriptor.getGame().getBoard().getColumns());
+        singleGameJson.addProperty("rows", singleGame.gameDescriptor.getGame().getBoard().getRows());
+        JsonArray boardJsonArray= new JsonArray();
+        Disc[][] board = singleGame.gameDescriptor.getGame().getBoard().getDiscs();
+         for(int i = 0; i<board.length; ++i) // rows
+         {
+             for(int j = 0; j<board[i].length; ++j) // cols
+             {
+                 JsonObject  currentDiscJson = new JsonObject();
+                 currentDiscJson.addProperty("row", i);
+                 currentDiscJson.addProperty("col", j);
+                 if(board[i][j] == null)
+                 {
+                     currentDiscJson.addProperty("color", "Gainsboro");
+                 }
+                 else
+                 {
+                     currentDiscJson.addProperty("color", singleGame.getColorByPlayer(board[i][j].getPlayer()));
+                 }
 
-            gamesJsonArray.add(currentGameJson);
+                 boardJsonArray.add(currentDiscJson);
+             }
+         }
+        singleGameJson.add("board", boardJsonArray);
 
+         // status
+        singleGameJson.addProperty("status", singleGame.gameDescriptor.isActive() ?  "active": "non-active");
 
-        singleGameJson.add("games", gamesJsonArray);
-        singleGameJson.addProperty("version",  getVersion());
-        */
+         //winners
+         if(singleGame.gameDescriptor.isEnded())
+         {
+             JsonArray winnersJsonArray= new JsonArray();
+             for(Player player: singleGame.gameDescriptor.getWinners())
+             {
+                 JsonObject  winnerDiscJson = new JsonObject();
+                 winnerDiscJson.addProperty("name", player.getName());
+                 winnersJsonArray.add(winnerDiscJson);
+             }
+             singleGameJson.add("winners", winnersJsonArray);
+         }
+
         return singleGameJson.toString();
     }
 

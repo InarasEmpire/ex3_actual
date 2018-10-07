@@ -58,4 +58,17 @@ public class SingleGame {
             throw new Exception("The game is already sctive, please join another non-active game");
         }
     }
+
+    String getColorByPlayer(Player player)
+    {
+        for(UIPlayer currPlayer : uiPlayersList)
+        {
+            if(player.getName() == currPlayer.player.getName())
+            {
+                return currPlayer.color;
+            }
+        }
+
+        return "Gainsboro";
+    }
 }

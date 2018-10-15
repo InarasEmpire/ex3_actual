@@ -62,7 +62,9 @@ public class TableServlet extends HttpServlet {
         }
         catch(Exception e)
         {
-            e.getMessage();
+            PrintWriter out = response.getWriter();
+            out.print(e.getMessage());
+            out.flush();
         }
     }
 

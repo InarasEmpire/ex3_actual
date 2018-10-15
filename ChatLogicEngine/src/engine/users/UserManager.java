@@ -49,7 +49,7 @@ public class UserManager {
         return false;
     }
 
-    public boolean getUserType(String username)
+    public boolean getIsComputerType(String username)
     {
         for (Iterator<UserContainer> iter = usersList.iterator(); iter.hasNext(); ) {
             UserContainer currUser = iter.next();

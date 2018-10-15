@@ -7,6 +7,10 @@
          <servlet-name>TableServlet</servlet-name>
          <servlet-class>chat.servlets.TableServlet</servlet-class>
      </servlet>
+    <servlet>
+        <servlet-name>SingleGameServlet</servlet-name>
+        <servlet-class>chat.servlets.SingleGameServlet</servlet-class>
+    </servlet>
      <servlet>
          <servlet-name>LoginServlet</servlet-name>
          <servlet-class>chat.servlets.LoginServlet</servlet-class>
@@ -15,16 +19,36 @@
          <servlet-name>UsersListServlet</servlet-name>
          <servlet-class>chat.servlets.UsersListServlet</servlet-class>
      </servlet>
+    <servlet>
+        <servlet-name>UsersPerGameServlet</servlet-name>
+        <servlet-class>chat.servlets.UsersPerGameServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserMoveServlet</servlet-name>
+        <servlet-class>chat.servlets.UserMoveServlet</servlet-class>
+    </servlet>
 
+
+    <servlet-mapping>
+        <servlet-name>UserMoveServlet</servlet-name>
+        <url-pattern>/usermove</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UsersPerGameServlet</servlet-name>
+        <url-pattern>/adduser</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TableServlet</servlet-name>
         <url-pattern>/table</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>SingleGameServlet</servlet-name>
+        <url-pattern>/singlegameroom</url-pattern>
+    </servlet-mapping>
      <servlet-mapping>
          <servlet-name>LoginServlet</servlet-name>
          <url-pattern>/pages/signup/login</url-pattern>
- </servlet-mapping>
+     </servlet-mapping>
       <servlet-mapping>
            <servlet-name>UsersListServlet</servlet-name>
            <url-pattern>/userslist</url-pattern>

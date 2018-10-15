@@ -4,6 +4,7 @@ import Logic.GameDescriptor;
 import Logic.Player;
 import engine.users.UserContainer;
 
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +33,9 @@ public class SingleGame {
             }
         }
         UIPlayer newPlayer = new UIPlayer(player, colors[uiPlayersList.size()]);
+        uiPlayersList.add(newPlayer);
 
+        gameDescriptor.getDynamicPlayers().addPlayer(newPlayer.player);
     }
 
     void addUIPlayer(String username, boolean isComputer, int idIndex) throws Exception {

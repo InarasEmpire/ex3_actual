@@ -2,7 +2,7 @@ var tableVersion = 0;
 var refreshRate = 2000; //mili seconds
 var USER_LIST_URL = buildUrlWithContextPath("userslist");
 var TABLE_LIST_URL = buildUrlWithContextPath("table");
-var NEW_GAAME_REQUEST_URL = buildUrlWithContextPath("games");
+var ADD_USER_URL = buildUrlWithContextPath("adduser");
 
 
 /*
@@ -104,30 +104,30 @@ $(function() { // onload...do
     //add a function to the submit event
    // $("#tableform").submit(function() {
 
-    $("#tableform").submit(function(e){
-        e.preventDefault();
-        var form = $("#tableform")[0];
-        var formData = new FormData(form);
+           $("#tableform").submit(function(e){
+            e.preventDefault();
+            var form = $("#tableform")[0];
+            var formData = new FormData(form);
 
-        $.ajax({
-            data: formData,
-            url: this.action,
-            type: 'POST',
-            timeout: 2000,
-            contentType:false,
-            processData:false,
-            error: function(error) {
-                console.error("Failed to submit");
-                errorMessage(error.responseText);
-            },
-            success: function() {
-                console.log("success onload");
-                clearErrorMessage();
-                //do not add the user string to the chat area
-                //since it's going to be retrieved from the server
-                //$("#result h1").text(r);
-            }
-        });
+            $.ajax({
+                data: formData,
+                url: this.action,
+                type: 'POST',
+                timeout: 2000,
+                contentType:false,
+                processData:false,
+                error: function(error) {
+                    console.error("Failed to submit");
+                    errorMessage(error.responseText);
+                },
+                success: function() {
+                    console.log("success onload");
+                    clearErrorMessage();
+                    //do not add the user string to the chat area
+                    //since it's going to be retrieved from the server
+                    //$("#result h1").text(r);
+                }
+            });
 
         $("#filename").val("");
         // by default - we'll always return false so it doesn't redirect the user.
@@ -181,16 +181,19 @@ $(function() {
 /*
 click on table row
  */
-
+var gameIndex = -1;
 //TODO: add buttons
 $(document).on("click", "tr", function(e) {
+    gameIndex =(this).rowIndex ;
+    gameIndex -=1;
+
     $(this).append("<!-- The Modal -->\n" +
         "<div id=\"myModal\" class=\"modal\">\n" +
         "\n" +
         "  <div class=\"modal-content\">\n" +
         "    <span class=\"close\">&times;</span>\n" +
         "    <p>You are about to start the game</p>\n" +
-        "\t<button type=\"submit\"  onclick=\"gotoGame( $(this).index());\"\">Enter Game</button>\n" +
+        "\t<button type=\"submit\"  onclick=\"gotoGame(this)\"\">Enter Game</button>\n" +
         "<button type=\"submit\" value=\"Submit\" onclick=\"closeTab()\">Dismiss</button>" +
         "  </div>\n" +
         "\n\n" +
@@ -218,36 +221,21 @@ $(document).on("click", "tr", function(e) {
     }
 });
 
-function gotoGame(index){
-    var id = (index - 1);
-    var url = buildUrlWithContextPath("../../games?index=" +  index);
+function gotoGame() {
+    //todo: check id the game started or not
+    if(gameIndex > -1) {
+        $.ajax({
+            url: ADD_USER_URL,
+            data: {"gameindex": gameIndex},
+            dataType: "POST"
+        });
 
-    document.location.href = url;
+        var url = buildUrlWithContextPath("pages/playgame/singlegameroom.html?index=" +  gameIndex);
+        document.location.href = url;
+        gameIndex = -1;
+    }
 }
 
 function closeTab(){
  document.getElementById("myModal").innerHTML = "";
-
-}
-
-function gotoNewGame() {
-    console.log("inside gotoNewGame");
-    $.ajax({
-        url: NEW_GAAME_REQUEST_URL,
-        data: "tableversion=" + tableVersion,
-
-        success: function(data) {
-            console.log("data.version: " + data.version + " || tableVersion: " +tableVersion);
-            //clearErrorMessage("");
-            if (data.version !== tableVersion) {
-                tableVersion = data.version;
-                appendToTableArea(data.games);
-            }
-            triggerAjaxTableContent();
-        },
-        error: function(error) {
-            triggerAjaxTableContent();
-            errorMessage(error.responseText);
-        }
-    });
 }

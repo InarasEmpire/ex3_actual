@@ -71,6 +71,12 @@ public class Player implements Serializable {
         this.id = (short)id;
     }
 
+    public Player(){
+        this.name = "anonymus";
+        this.type = "human";
+        this.id = -1;
+    }
+
     /**
      * Gets the value of the name property.
      *

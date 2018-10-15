@@ -196,6 +196,8 @@ public class GameDescriptor {
         if(board.columns.intValue() < COL_MIN || board.columns.intValue() > COL_MAX)
             throw new Exception("Size of columns in board must be between "+COL_MIN+" and "+COL_MAX);
 
+        this.game.board.init();
+
         if(game.target.intValue() < TARGET_MIN || game.target.intValue() >= board.rows || game.target.intValue() >= board.columns.intValue())
             throw new Exception("Target value must be smaller than columns size and rows size and at least "+TARGET_MIN);
 
@@ -205,10 +207,10 @@ public class GameDescriptor {
 
 
         this.getDynamicPlayers().init();
-//        if(this.players == null)
-//        {
-//            this.players = new Players();
-//        }
+        if(this.players == null)
+        {
+            this.players = new Players();
+        }
 //        if(this.players.player.size() < PLAYERS_MIN || this.players.player.size() > PLAYERS_MAX)
 //            throw new Exception("The number of players should be between "+PLAYERS_MIN+" and "+PLAYERS_MAX);
 
@@ -221,7 +223,7 @@ public class GameDescriptor {
     }
 
     public void executePlayerMove(int col, BoardOperation operation){
-        Player activePlayer = this.players.getActivePlayer();
+        Player activePlayer = this.dynamicPlayers.getActivePlayer();
         if(operation.isAllowed(activePlayer, col)){
             operation.execute(activePlayer, col);
             activePlayer.turnAmount++;
@@ -232,7 +234,7 @@ public class GameDescriptor {
     }
 
     public void play(){
-        Player activePlayer = this.players.getActivePlayer();
+        Player activePlayer = this.dynamicPlayers.getActivePlayer();
 
         if (activePlayer.isComputer() && !this.isEnded){
             SleeperTask sleeper = new SleeperTask();
@@ -258,22 +260,22 @@ public class GameDescriptor {
     }
 
     public void swapPlayers(){
-        this.players.setNextPlayerAsActive();
-        Player activePlayer = this.players.getActivePlayer();
+        this.dynamicPlayers.setNextPlayerAsActive();
+        Player activePlayer = this.dynamicPlayers.getActivePlayer();
 
         if(this.game.board.isConnectExists()
                 || (this.game.isPopoutMode() && this.game.board.isFull() && !this.game.board.popOut.hasOption(activePlayer))
                 || (!this.game.isPopoutMode() && this.game.board.isFull())
-                || (this.players.player.size() == 1))
+                || (this.dynamicPlayers.getPlayers().size() == 1))
             endGame();
         else
             this.play();
     }
 
     public void removePlayer(Player player){
-        boolean wasActive = player.equals(this.players.getActivePlayer());
-        if(this.players.player.contains(player)){
-            this.players.remove(player);
+        boolean wasActive = player.equals(this.dynamicPlayers.getActivePlayer());
+        if(this.dynamicPlayers.getPlayers().contains(player)){
+            this.dynamicPlayers.remove(player);
             this.game.board.removeAllPlayerDiscs(player);
             this.game.board.checkConnectFullBoard();
             if(wasActive)
@@ -283,7 +285,7 @@ public class GameDescriptor {
 
     public void startGame(){
         this.turnAmount = 0;
-        this.players.init();
+        this.dynamicPlayers.init();
         this.history.init();
         this.game.init();
         this.isEnded = false;
@@ -300,8 +302,8 @@ public class GameDescriptor {
     public List<Player> getWinners(){
         List<Player> winners = new ArrayList<>();
         if(this.isEnded){
-            if(this.players.player.size() == 1)
-                winners.add(this.players.player.get(0));
+            if(this.dynamicPlayers.getPlayers().size() == 1)
+                winners.add(this.dynamicPlayers.getPlayers().get(0));
             else{
                 for(Connect connect : this.game.board.getConnects()){
                     if(!winners.contains(connect.getPlayer()))

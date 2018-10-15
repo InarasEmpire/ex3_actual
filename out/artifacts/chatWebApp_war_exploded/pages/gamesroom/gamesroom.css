@@ -191,7 +191,7 @@ error xpopup
     height: 60px;
     line-height: 60px;
     text-transform: uppercase;
-    color: #FFF;
+    color: red;
     -webkit-transition: background-color 0.2s;
     -moz-transition: background-color 0.2s;
     transition: background-color 0.2s;
@@ -263,7 +263,7 @@ popup
 .popup {
     margin: 70px auto;
     padding: 20px;
-    background: #fff;
+    background: grey;
     border-radius: 5px;
     width: 30%;
     position: relative;
@@ -361,5 +361,5 @@ header {
     padding: 30px;
     text-align: center;
     font-size: 15px;
-    color: white;
+    color: black;
 }

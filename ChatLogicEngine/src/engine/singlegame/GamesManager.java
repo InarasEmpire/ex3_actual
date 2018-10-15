@@ -7,11 +7,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import engine.users.UserContainer;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class GamesManager {
 
-    Set<SingleGame> gamesList;
+    Set<SingleGame> gamesList= new HashSet<>();
 
 
     public synchronized SingleGame getGameByIndex(int index) throws Exception {
@@ -27,7 +28,7 @@ public class GamesManager {
 
     public synchronized void addNewGame(GameDescriptor game){
         SingleGame newSngleGame = new SingleGame(game);
-
+        gamesList.add(newSngleGame);
     }
 
     public synchronized void addPlayerToGame(UserContainer userContainer, int gameIndex) throws Exception {
@@ -37,6 +38,7 @@ public class GamesManager {
 
     public synchronized void addPlayerToGame(Player player, int gameIndex) throws Exception {
         SingleGame gameByIndex = getGameByIndex(gameIndex);
+
         gameByIndex.addUIPlayer(player);
     }
 
@@ -67,7 +69,9 @@ public class GamesManager {
             playersJsonArray.add(currentPlayerJson);
         }
         singleGameJson.add("players", playersJsonArray);
-        singleGameJson.addProperty("nextTurn", singleGame.gameDescriptor.getPlayers().getActivePlayer().getName());
+        singleGameJson.addProperty("currentPlayers", String.valueOf(singleGame.gameDescriptor.getDynamicPlayers().getPlayers().size()));
+        singleGameJson.addProperty("totalPlayers", String.valueOf(singleGame.gameDescriptor.getDynamicPlayers().getTotalPlayers()));
+        singleGameJson.addProperty("nextTurn", singleGame.gameDescriptor.getDynamicPlayers().getActivePlayer().getName());
 
         // board
         singleGameJson.addProperty("cols", singleGame.gameDescriptor.getGame().getBoard().getColumns());
@@ -97,6 +101,8 @@ public class GamesManager {
 
          // status
         singleGameJson.addProperty("status", singleGame.gameDescriptor.isActive() ?  "active": "non-active");
+        singleGameJson.addProperty("ended", singleGame.gameDescriptor.isEnded() ? "true": "false");
+        singleGameJson.addProperty("variant", singleGame.gameDescriptor.getGame().getVariant());
 
          //winners
          if(singleGame.gameDescriptor.isEnded())

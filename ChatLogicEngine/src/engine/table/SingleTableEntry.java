@@ -51,7 +51,7 @@ public class SingleTableEntry {
             newGame.init();
         }
         catch(JAXBException e){
-            throw new Exception("Please validate yur XML file structure.");
+            throw new Exception("Please validate your XML file structure.");
         }
 
         validateGame(newGame);

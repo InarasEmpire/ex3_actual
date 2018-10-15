@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
  * provided in this class.
  * 
  */
-@XmlRegistry
+
 public class ObjectFactory {
 
     private final static QName _Type_QNAME = new QName("", "Type");
@@ -46,7 +46,7 @@ public class ObjectFactory {
      * 
      */
     public Player createPlayer() {
-        return new Player();
+        return new Player("kkk", true, -1);
     }
 
     /**
@@ -93,7 +93,6 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "Type")
     public JAXBElement<String> createType(String value) {
         return new JAXBElement<String>(_Type_QNAME, String.class, null, value);
     }
@@ -102,7 +101,6 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "Name")
     public JAXBElement<String> createName(String value) {
         return new JAXBElement<String>(_Name_QNAME, String.class, null, value);
     }

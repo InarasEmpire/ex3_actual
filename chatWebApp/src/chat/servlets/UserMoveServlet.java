@@ -26,12 +26,14 @@ public class UserMoveServlet extends HttpServlet {
             if (username == null) {
                 response.sendRedirect(request.getContextPath() + "/index.html");
             }
-            // add current user to game description
+
+            // get current game index
+            String gamecolumn= request.getParameter("type");
+
             int gameId= ServletUtils.getIntParameter(request, Constants.GAME_INDEX_PARAMETER);
             if (gameId == Constants.INT_PARAMETER_ERROR) {
                 return;
             }
-
             GamesManager gamesManager = ServletUtils.getGamesManager(getServletContext());
             SingleGame currGame= gamesManager.getGameByIndex(gameId);
 

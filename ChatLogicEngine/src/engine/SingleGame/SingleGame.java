@@ -13,11 +13,11 @@ public class SingleGame {
     public GameDescriptor gameDescriptor;
 
     String colors[] = {"Maroon",
-            "Azure",
             "Scarlet",
             "Crimson",
             "Tangerine",
-            "Magenta"};
+            "Magenta",
+            "Azure"};
 
     public SingleGame(GameDescriptor gameDescriptor){
         this.gameDescriptor = gameDescriptor;

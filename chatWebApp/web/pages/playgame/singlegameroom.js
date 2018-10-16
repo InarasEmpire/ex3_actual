@@ -15,6 +15,7 @@ function createTable(gameJson) {
     for (var j = 0; j < gameJson.cols; j++) {
         colElem = document.createElement('td');
         btn = document.createElement('button');
+        btn.innerHTML = 'v';
         btn.addEventListener("click", function () {  selectedPushInCol($(this)); }, false);
         colElem.appendChild(btn);
         rowElem.appendChild(colElem);
@@ -23,18 +24,19 @@ function createTable(gameJson) {
 
 
     // for (var i in boardArray) {
-    for(var i=0; i<boardArray.length; i++){
+    var k = 0;
+    for(var x=0; x<gameJson.rows; x++){
         rowElem = document.createElement('tr');
-
-        for (var j = 0; j < gameJson.cols; j++) {
+        for (var y = 0; y < gameJson.cols; y++) {
             colElem = document.createElement('td');
-            colElem.setAttribute("row",boardArray[i].row);
-            colElem.setAttribute("col", boardArray[i].col);
-            colElem.setAttribute("bgcolor", boardArray[i].color);
-
+            colElem.setAttribute("row", boardArray[k].rowId);
+            colElem.setAttribute("col", boardArray[k].colId);
+           // colElem.setAttribute("class", "cell");
+            colElem.setAttribute("bgcolor", boardArray[k].color);
+            k++;
             rowElem.appendChild(colElem);
         }
-        i=i+j;
+        //i=i+j-1;
         tableElem.appendChild(rowElem);
     }
 
@@ -43,6 +45,7 @@ function createTable(gameJson) {
         rowElem = document.createElement('tr');
         for (var j = 0; j < gameJson.cols; j++) {
             colElem = document.createElement('button');
+            btn.innerHTML = 'v';
             colElem.addEventListener("click", function() {  selectedPopOutCol($(this)); }, false);
             rowElem.appendChild(colElem);
         }
@@ -74,68 +77,81 @@ function ajaxBoardContent() {
         success: function(gameJson) {
             console.log(GAME_URL);
             createTable(gameJson);
-            updateStatus(gameJson);
-            checkIfGameStarted(gameJson);
+            refreshUsersList(gameJson.players);
+            if(!gameIsStarted) {
+                checkIfGameStarted(gameJson);
+            }
             updateStatus(gameJson);
         },
+        error: function(jqxhr, status, exception) {
+            alert('Exception:', exception);
+        }
+            /*
         error: function(error) {
             console.log(GAME_URL);
             console.error(error.responseText);
-        }
+        }*/
     });
 }
 
 function selectedPushInCol(elem){
-    var gameindex = getQueryVariable("index");
-    var col =  elem.closest("td").index();
-    //.matches
-    var dataString = {"gameindex":gameindex, "col":col, "type":"pushin"};
+    if(gameIsStarted) {
+        var gameindex = getQueryVariable("index");
+        var col = elem.closest("td").index();
+        //.matches
+        var dataString = {"gameindex": gameindex, "col": col, "type": "pushin"};
 
-    $.ajax({
-        url: USER_MOVE_URL,
-        type: 'POST',
-        timeout: 2000,
-        data: dataString,
-        dataType:"json",
-        contentType:false,
-        processData:false,
-        error: function(error) {
-            console.error("Failed to submit player's move");
-            errorMessage(error.responseText);
-        },
-        success: function() {
-            console.log("success submit player's move");
-            clearErrorMessage();
-        }
-    });
+        $.ajax({
+            url: USER_MOVE_URL,
+            type: 'POST',
+            timeout: 2000,
+            data: dataString,
+            dataType: "json",
+           /* error: function (error) {
+                console.error("Failed to submit player's move");
+                errorMessage(error.responseText);
+            },*/
+            success: function () {
+                console.log("success submit player's move");
+                clearErrorMessage();
+            }
+        });
+    }
 }
 
 function selectedPopOutCol(elem)
 {
-    var gameindex = getQueryVariable("index");
-    var col = elem.parent().children().index(elem);
-    $.ajax({
-        data: {"col":col, "type":"popout", "gameindex": gameindex},
-        url: USER_MOVE_URL,
-        type: 'POST',
-        dataType: 'json',
-        timeout: 2000,
-        contentType:false,
-        processData:false,
-        error: function(error) {
-            console.error("Failed to submit player's move");
-            errorMessage(error.responseText);
-        },
-        success: function() {
-            console.log("success submit player's move");
-            clearErrorMessage();
+    if(gameIsStarted) {
+        var gameindex = getQueryVariable("index");
+        var col = elem.closest("td").index();
+        //.matches
+        var dataString = {"gameindex": gameindex, "col": col, "type": "pushin"};
+
+        if (gameIsStarted) {
+            var gameindex = getQueryVariable("index");
+            var col = elem.parent().children().index(elem);
+            $.ajax({
+                data: dataString,
+                url: USER_MOVE_URL,
+                type: 'POST',
+                dataType: 'json',
+                timeout: 2000,
+                error: function (error) {
+                    console.error("Failed to submit player's move");
+                    errorMessage(error.responseText);
+                },
+                success: function () {
+                    console.log("success submit player's move");
+                    clearErrorMessage();
+                }
+            });
         }
-    });
+    }
 }
 
 function checkIfGameStarted(gameJson)
 {
-    if(!gameIsStarted && gameJson.state == "active")
+    if(!gameIsStarted &&  gameJson.status == "active")
     {
         alert("Game is about to start!");
         gameIsStarted = true;
@@ -169,8 +185,27 @@ function updateStatus(data){
 //   players list
 //----------------
 
+function refreshUsersList(usersJson) {
+    $("#onlineusers").empty();
 
+    var userList = document.getElementsByClassName('onlineusers');
 
+    for(var user in usersJson)
+    {
+        var currUserLi = document.createElement('li');
+        var currUserDiv = document.createElement('div');
+        //var nameElem = document.createTextNode(user.name);
+        //nameElem. = "white";
+        currUserDiv.appendChild(nameElem);
+        currUserDiv.appendChild(document.createTextNode(user.name));
+        currUserDiv.appendChild(document.createTextNode(user.type));
+        currUserDiv.appendChild(document.createTextNode(user.turnAmount));
+        currUserDiv.setAttribute("bgcolor", user.color);
+        //nameElem.style.backgroundColor = user.color;
+
+        userList.append(currUserLi);
+    }
+}
 
 function errorMessage(error)
 {

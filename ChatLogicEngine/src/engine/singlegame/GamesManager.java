@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import engine.users.UserContainer;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,14 +78,17 @@ public class GamesManager {
         singleGameJson.addProperty("cols", singleGame.gameDescriptor.getGame().getBoard().getColumns());
         singleGameJson.addProperty("rows", singleGame.gameDescriptor.getGame().getBoard().getRows());
         JsonArray boardJsonArray= new JsonArray();
-        Disc[][] board = singleGame.gameDescriptor.getGame().getBoard().getDiscs();
+        //Disc[][] board = singleGame.gameDescriptor.getGame().getBoard().getDiscs();
+
+        Disc[][] board = reverseArray(singleGame.gameDescriptor.getGame().getBoard().getDiscs());
+
          for(int i = 0; i<board.length; ++i) // rows
          {
              for(int j = 0; j<board[i].length; ++j) // cols
              {
                  JsonObject  currentDiscJson = new JsonObject();
-                 currentDiscJson.addProperty("row", i);
-                 currentDiscJson.addProperty("col", j);
+                 currentDiscJson.addProperty("rowId", i);
+                 currentDiscJson.addProperty("colId", j);
                  if(board[i][j] == null)
                  {
                      currentDiscJson.addProperty("color", "Gainsboro");
@@ -120,5 +124,15 @@ public class GamesManager {
         return singleGameJson.toString();
     }
 
+
+    private Disc[][] reverseArray(Disc[][] board){
+        Disc[][] reversed = new Disc[board.length][board[0].length];
+
+        for(int i=0; i<board.length; i++){
+            reversed[i]=board[board.length - 1 - i];
+        }
+
+       return reversed;
+    }
 
 }

@@ -22,14 +22,13 @@ public class UserMoveServlet extends HttpServlet {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         try{
+            // get user name
             String username = SessionUtils.getUsername(request);
             if (username == null) {
                 response.sendRedirect(request.getContextPath() + "/index.html");
             }
 
-            // get current game index
-            String gamecolumn= request.getParameter("type");
-
+            // get game index
             int gameId= ServletUtils.getIntParameter(request, Constants.GAME_INDEX_PARAMETER);
             if (gameId == Constants.INT_PARAMETER_ERROR) {
                 return;
@@ -45,7 +44,7 @@ public class UserMoveServlet extends HttpServlet {
                 throw new Exception("the game isn't started yet!");
             }
 
-
+            // play move
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
             if(userManager.getIsComputerType(username))
             {
@@ -80,7 +79,8 @@ public class UserMoveServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        response.sendRedirect("pages/gamesroom/gamesroom.html");
     }
 
     /**

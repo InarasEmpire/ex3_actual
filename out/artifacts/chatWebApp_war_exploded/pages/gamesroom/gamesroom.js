@@ -12,14 +12,13 @@ User List Handler
 // ["moshe","nachum","nachche"...]
 function refreshUsersList(users) {
     //clear all current users
-    $("#userslist").empty();
-    
+    $("#onlineusers").empty();
+
+
     // rebuild the list of users: scan all users and add them to the list of users
     $.each(users || [], function(index, username) {
         console.log("Adding user #" + index + ": " + username);
-        //create a new <option> tag with a value in it and
-        //appeand it to the #userslist (div with id=userslist) element
-        $('<li>' + username + '</li>').appendTo($("#userslist"));
+ $('<li>' + username + '</li>').appendTo($("#onlineusers"));
     });
 }
 

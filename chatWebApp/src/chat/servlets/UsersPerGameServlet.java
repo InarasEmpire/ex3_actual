@@ -22,34 +22,47 @@ public class UsersPerGameServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        try{
+        try {
             String username = SessionUtils.getUsername(request);
             if (username == null) {
                 response.sendRedirect(request.getContextPath() + "/index.html");
             }
 
             // add current game index
-            int gameId= ServletUtils.getIntParameter(request, Constants.GAME_INDEX_PARAMETER);
+            int gameId = ServletUtils.getIntParameter(request, Constants.GAME_INDEX_PARAMETER);
             if (gameId == Constants.INT_PARAMETER_ERROR) {
                 return;
             }
 
-            UserManager userManager = ServletUtils.getUserManager(getServletContext());
-            Player player = new Player(username, userManager.getIsComputerType(username), userManager.getUserId(username));
-            GamesManager gamesManager = ServletUtils.getGamesManager(getServletContext());
-            if(gamesManager.getGameByIndex(gameId).gameDescriptor.isActive() == false) {
-                gamesManager.addPlayerToGame(player, gameId);
-                SingleGame singleGame= gamesManager.getGameByIndex(gameId);
-                if(singleGame.gameDescriptor.getDynamicPlayers().getPlayers().size() == singleGame.gameDescriptor.getDynamicPlayers().getTotalPlayers())
-                {
-                    // start game
-                    singleGame.gameDescriptor.startGame();
 
+            //get opertion
+            String operation = request.getParameter("opertion");
+
+                UserManager userManager = ServletUtils.getUserManager(getServletContext());
+
+                GamesManager gamesManager = ServletUtils.getGamesManager(getServletContext());
+                if (gamesManager.getGameByIndex(gameId).gameDescriptor.isActive() == false) {
+                    Player player = new Player(username, userManager.getIsComputerType(username), userManager.getUserId(username));
+                    gamesManager.addPlayerToGame(player, gameId);
+                    SingleGame singleGame = gamesManager.getGameByIndex(gameId);
+                    if (operation.equals("add")) {
+                        if (singleGame.gameDescriptor.getDynamicPlayers().getPlayers().size() == singleGame.gameDescriptor.getDynamicPlayers().getTotalPlayers()) {
+                            // start game
+                            singleGame.gameDescriptor.startGame();
+                        } else {
+                            throw new Exception("this game already started!");
+                        }
+                    }
+                    else if (operation.equals("remove")) {
+                        Player removeThis = singleGame.getPlayerByName(username);
+                        if(removeThis == null)
+                        {
+                            throw new Exception("something wrong with you");
+                        }
+                        singleGame.gameDescriptor.removePlayer(removeThis);
+
+                    }
                 }
-            }
-            else{
-                throw new Exception("this game already started!");
-            }
         }
         catch (Exception e){
             PrintWriter out = response.getWriter();

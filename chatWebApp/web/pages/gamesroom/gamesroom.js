@@ -85,7 +85,7 @@ function ajaxTableContent() {
         success: function(data) {
             console.log("data.version: " + data.version + " || tableVersion: " +tableVersion);
             //clearErrorMessage("");
-            if (data.version !== tableVersion) {
+             if (data.version !== tableVersion) {
                 tableVersion = data.version;
                 appendToTableArea(data.games);
             }
@@ -171,10 +171,7 @@ $(function() {
 
     //The users list is refreshed automatically every second
     setInterval(ajaxUsersList, refreshRate);
-
-    //The chat content is refreshed only once (using a timeout) but
-    //on each call it triggers another execution of itself later (1 second later)
-    triggerAjaxTableContent();
+    setInterval(triggerAjaxTableContent, refreshRate);
 });
 
 
@@ -182,7 +179,6 @@ $(function() {
 click on table row
  */
 var gameIndex = -1;
-//TODO: add buttons
 $(document).on("click", "tr", function(e) {
     gameIndex =(this).rowIndex ;
     gameIndex -=1;
@@ -222,17 +218,18 @@ $(document).on("click", "tr", function(e) {
 });
 
 function gotoGame() {
-    //todo: check id the game started or not
+    //todo: check iכ the game started or not
     if(gameIndex > -1) {
         $.ajax({
             url: ADD_USER_URL,
-            data: {"gameindex": gameIndex},
+            data: {"gameindex": gameIndex, "operation":"add"},
             dataType: "POST"
         });
 
         var url = buildUrlWithContextPath("pages/playgame/singlegameroom.html?index=" +  gameIndex);
         document.location.href = url;
         gameIndex = -1;
+        appendToTableArea(data.games);
     }
 }
 

@@ -2,6 +2,8 @@ var gameIsStarted = false;
 var refreshRate = 1000;
 var GAME_URL = buildUrlWithContextPath("singlegameroom");
 var USER_MOVE_URL = buildUrlWithContextPath("usermove");
+var REMOVE_USER_URL = buildUrlWithContextPath("adduser");
+
 
 function createTable(gameJson) {
     var tableElem, rowElem, colElem;
@@ -77,7 +79,7 @@ function ajaxBoardContent() {
         success: function(gameJson) {
             console.log(GAME_URL);
             createTable(gameJson);
-            refreshUsersList(gameJson.players);
+            refreshUsersList(gameJson.players, gameJson.nextTurn);
             if(!gameIsStarted) {
                 checkIfGameStarted(gameJson);
             }
@@ -165,6 +167,7 @@ function updateStatus(data){
     $("#status").empty();
     if(gameJson.ended == "true"){
         message = "game is ended."
+        gameEnded(gameJson);
     }
     if(gameJson.status == "active") {
         message = "next turn: " + gameJson.nextTurn;
@@ -181,30 +184,91 @@ function updateStatus(data){
     node.appendChild(textnode);
     document.getElementById("status").appendChild(node);
 }
+
+function gameEnded(gameJson){
+    var message;
+    if(gameJson.winners.length == 1)
+    {
+        if(gameJson.players.length == 1)
+        {
+            message ="all the other players left the game.";
+        }
+        else{
+            message = "The winner is: " + winners[0].name;
+
+        }
+    }
+    else if(gameJson.winners.length == 1){
+        message = "The winner are: ";
+        for(var i = 0; i<gameJson.winners.length; i++){
+            message += gameJson.winners[i].name +  "  ";
+        }
+    }
+    else{
+        message = "It's a Tie! Game Over.";
+    }
+
+    alert(message);
+}
+
+function goBack(){
+    $.ajax({
+        url: REMOVE_USER_URL,
+        data: {"gameindex": gameIndex, "operation": "operation"},
+        dataType: "POST"
+    });
+
+    var url = buildUrlWithContextPath("pages/gamesroom/gamesroom.html" +  gameIndex);
+    document.location.href = url;
+    gameIndex = -1;
+
+}
+
 //----------------
 //   players list
 //----------------
 
-function refreshUsersList(usersJson) {
+function refreshUsersList(usersJson, nextTurnUserName) {
     $("#onlineusers").empty();
+    var userListDiv = document.getElementsByClassName('onlineusers');
+    var uList = document.createElement('ul');
 
-    var userList = document.getElementsByClassName('onlineusers');
-
-    for(var user in usersJson)
+    for(var i in usersJson)
     {
-        var currUserLi = document.createElement('li');
-        var currUserDiv = document.createElement('div');
-        //var nameElem = document.createTextNode(user.name);
-        //nameElem. = "white";
-        currUserDiv.appendChild(nameElem);
-        currUserDiv.appendChild(document.createTextNode(user.name));
-        currUserDiv.appendChild(document.createTextNode(user.type));
-        currUserDiv.appendChild(document.createTextNode(user.turnAmount));
-        currUserDiv.setAttribute("bgcolor", user.color);
-        //nameElem.style.backgroundColor = user.color;
+        var node = document.createElement('li');
 
-        userList.append(currUserLi);
+        var spanName = document.createElement('span');
+        if(nextTurnUserName.localeCompare(usersJson[i].name) == 0){
+            spanName.setAttribute("class", "name_turn");
+        }
+        else{
+            spanName.setAttribute("class", "name");
+        }
+        spanName.innerHTML = usersJson[i].name;
+
+        var spanName = document.createElement('span');
+        spanName.setAttribute("class", "name");
+        spanName.innerHTML = usersJson[i].name;
+
+        var spanType = document.createElement('span');
+        spanType.setAttribute("class", "type");
+        spanType.innerHTML =" (" +usersJson[i].type+")";
+
+
+        var spanTurn = document.createElement('span');
+        spanTurn.setAttribute("class", "turns color");
+        spanTurn.innerHTML =usersJson[i].turnAmount;
+        spanTurn.style.backgroundColor =usersJson[i].color
+
+
+        node.appendChild(spanName);
+        node.appendChild(spanType);
+        node.appendChild(spanTurn);
+
+        uList.appendChild(node);
     }
+    $("#onlineusers").append(uList);
+    //userList.appendChild(uList);
 }
 
 function errorMessage(error)

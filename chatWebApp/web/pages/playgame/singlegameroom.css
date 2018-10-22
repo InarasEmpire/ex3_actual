@@ -10,21 +10,8 @@ body {
 
 /*** Table Styles **/
 
-.table-fill {
-    background: white;
-    border-radius:3px;
-    border-collapse: collapse;
-    height: 320px;
-    margin: auto;
-    max-width: 600px;
-    padding:5px;
-    width: 100%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    animation: float 5s infinite;
-}
-
 th {
-    color:#D5DDE5;;
+    color:#D5DDE5;
     background:#1b1e24;
     border-bottom:4px solid #9ea7af;
     border-right: 1px solid #343a45;
@@ -46,20 +33,12 @@ th:last-child {
 }
 
 tr {
+
     border-top: 1px solid #C1C3D1;
     border-bottom-: 1px solid #C1C3D1;
     color:#666B85;
-    font-size:16px;
-    font-weight:normal;
-    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
-tr:hover td {
-    background:#4E5066;
-    color:#FFFFFF;
-    border-top: 1px solid #22262e;
-}
-/*
 tr:first-child {
     border-top:none;
 }
@@ -68,30 +47,10 @@ tr:last-child {
     border-bottom:none;
 }
 
-tr:nth-child(odd) td {
-    background:#EBEBEB;
-}
-
-tr:nth-child(odd):hover td {
-    background:#4E5066;
-}
-*/
-tr:last-child td:first-child {
-    border-bottom-left-radius:3px;
-}
-
-tr:last-child td:last-child {
-    border-bottom-right-radius:3px;
-}
-
 td {
-    background:#FFFFFF;
-    padding:20px;
-    text-align:left;
+    border-radius: 100px;
+    /*padding:20px;*/
     vertical-align:middle;
-    font-weight:300;
-    font-size:18px;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
     border-right: 1px solid #C1C3D1;
 }
 
@@ -99,29 +58,6 @@ td:last-child {
     border-right: 0px;
 }
 
-th.text-left {
-    text-align: left;
-}
-
-th.text-center {
-    text-align: center;
-}
-
-th.text-right {
-    text-align: right;
-}
-
-td.text-left {
-    text-align: left;
-}
-
-td.text-center {
-    text-align: center;
-}
-
-td.text-right {
-    text-align: right;
-}
 
 
 
@@ -333,9 +269,9 @@ popup
 /* Create two columns/boxes that floats next to each other */
 nav {
     float: left;
-    width: 10%;
     /*height: 300px;  only for demonstration, should be removed */
     background: #fbc531;
+    width: 250px;
     padding: 20px;
     color: black;
     height: 100vh;
@@ -350,7 +286,7 @@ nav ul {
 article {
     float: left;
     padding: 20px;
-    width: 90%;
+    width: 70%;
     background-color: #192a56;
     height: 100vh;  /*only for demonstration, should be removed */
 }
@@ -366,287 +302,56 @@ header {
 }
 
 
-/*
-td {
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    text-align: center;
-    border: 2px solid black;
-}
-.cell {
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    display: inline-block;
+
+/*-------------------------*/
+
+.users_div {
+    font-family:sans-serif;
 }
 
-
-td:hover{
-    background-color: lightblue;
+ul {
+    list-style :none;
 }
 
-.buttons-bottom,.buttons-top {
-position:absolute;
-width:100%;
+li {
+    background: white;
+    border-top : 1px solid #ccc;
+    border-right : 1px solid #ccc;
+    border-left : 1px solid #ccc;
+    width: 150px;
+    overflow:hidden;
+    padding: 10px;
+    margin:0;
+    line-height:20px;
 }
 
-.buttons-top {
-top:-20px;
-}
-.buttons-bottom{
-bottom:-20px;
-}
-.container {
-width:100%;
-position:relative;
+li:first-child{
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
-html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
-.board {
-position:absolute;
-min-width:100%;
-margin: 0 auto;
-max-width: 100%;
-height: 100%;
-display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-justify-content: center;
-align-content: stretch;
-align-items: stretch;
-}
-.row {
-display: flex;
-flex-direction: row;
-width: 100%;
-}
-.cell { transition: .2s ease; }
-
-
-
-.cell {
-border-radius:50%;
-margin:2%;
-display: flex;
-flex-grow: 1;
-justify-content: center;
-align-items: center;
-font-weight: 300;
+li:last-child{
+    border-bottom : 1px solid #ccc;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
+.name_turn {
+    font-weight:bold
 }
 
-article {
-    float: left;
-    padding: 20px;
-    width: 90%;
-    background-color: #192a56;
-    height: 100vh;  /*only for demonstration, should be removed
+.type {
+    color :grey;
+    font-size:12px;
 }
 
-
-/* Style the header
-header {
-    background-color: #273c75;
-    padding: 30px;
-    text-align: center;
-    font-size: 15px;
-    color: black;
-}
-
-
-
-.popup {
-    margin: 70px auto;
-    padding: 20px;
-    background: grey;
-    border-radius: 5px;
-    width: 30%;
-    position: relative;
-    transition: all 5s ease-in-out;
-}
-
-.popup h2 {
-    margin-top: 0;
-    color: #333;
-    font-family: Tahoma, Arial, sans-serif;
-}
-.popup .close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    transition: all 200ms;
-    font-size: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #333;
-}
-.popup .close:hover {
-    color: #06D85F;
-}
-.popup .content {
-    max-height: 30%;
-    overflow: auto;
-}
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Create two columns/boxes that floats next to each other
-nav {
-    float: left;
-    width: 10%;
-    /*height: 300px;  only for demonstration, should be removed
-    background: #fbc531;
-    padding: 20px;
-    color: black;
-    height: 100vh;
-}
-
-/* Style the list inside the menu
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-article {
-    float: left;
-    padding: 20px;
-    width: 90%;
-    background-color: #192a56;
-    height: 100vh;  /*only for demonstration, should be removed
-}
-
-
-/* Style the header
-header {
-    background-color: #273c75;
-    padding: 30px;
-    text-align: center;
-    font-size: 15px;
-    color: white;
-}
-
-
-/* BOARD
-
-.main-container {
-    width:20%; //real wanted width
-margin:40px auto;
-}
-.buttons-bottom,.buttons-top {
-    position:absolute;
-    width:100%;
-}
-
-.arrow bounce up {
-    top:-20px;
-}
-.arrow bounce down{
-    bottom:-20px;
-}
-.boad {
-    width:100%;
-    position:relative;
-}
-
-/* arrow bounce
-a { color: white; text-decoration: none; }
-
-.arrow {
-    text-align: center;
-    margin: 8% 0;
-}
-.bounce {
-    -moz-animation: bounce 2s infinite;
-    -webkit-animation: bounce 2s infinite;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-30px);
-    }
-    60% {
-        transform: translateY(-15px);
-    }
-}
-
-* { box-sizing: border-box; }
-html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
-.board {
-    position:absolute;
-    min-width:100%;
-    margin: 0 auto;
-    max-width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: stretch;
-    align-items: stretch;
-}
-.row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.cell { transition: .2s ease; }
-
-
-.row-even
-.cell:nth-child(even) {
-    background-color: white;
-}
-
-.cell:nth-child(odd) { background-color: Gainsboro; }
-
-.row-odd
-.cell:nth-child(odd) { background-color: white; }
-.cell:nth-child(even) { background-color: Gainsboro; }
-
-
-.row .cell:nth-child(even),
-.row .cell:nth-child(odd)
-:hover,
-:focus { background-color: green; }
-
-
-.cell {
-    /* background-color: $green;
+.turns {
+    display:inline-block;
+    width:20px;
+    height:20px;
+    font-size:10px;
+    text-align:center;
+    color : white;
     border-radius:50%;
-    margin:2%;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-    font-weight: 300;
+    float:right;
 }
